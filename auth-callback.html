@@ -1,18 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script>
-  const hash = window.location.hash
-  const params = new URLSearchParams(hash.replace('#', ''))
-  const type = params.get('type')
-  if (type === 'recovery') {
-    const token = params.get('access_token')
-    const refresh = params.get('refresh_token')
-    window.location.href = `scratchrpay://reset-password#access_token=${token}&refresh_token=${refresh}&type=recovery`
-  }
-</script>
+<title>Scratchr Pay — Redirecting...</title>
 </head>
 <body>
 <p>Redirecting to Scratchr Pay...</p>
+<script>
+  const params = new URLSearchParams(window.location.search)
+  const tokenHash = params.get('token_hash')
+  const type = params.get('type')
+
+  if (type === 'recovery' && tokenHash) {
+    const deepLink = `scratchrpay://reset-password?token_hash=${tokenHash}&type=recovery`
+    window.location.href = deepLink
+    setTimeout(() => {
+      document.body.innerHTML = '<h2>Open Scratchr Pay</h2><p>If the app did not open automatically, please open Scratchr Pay manually and request a new password reset.</p>'
+    }, 3000)
+  } else {
+    document.body.innerHTML = '<p>Invalid reset link. Please request a new one in the app.</p>'
+  }
+</script>
 </body>
 </html>
